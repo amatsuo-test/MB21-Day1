@@ -38,6 +38,7 @@ download.file("https://www.dropbox.com/s/3bqwbxw6mr9t9jv/COVID-19_Vaccinations_i
 #### Read the file
 
 ```{r}
+df_vac <- read_csv("COVID-19_Vaccinations_in_the_United_States_County.csv.tar.gz")
 
 ```
 
