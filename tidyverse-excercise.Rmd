@@ -186,7 +186,7 @@ Now let's visualize the outputs using ggplot
 ### Time series plot of total vaccination in the US
 
 ```{r}
-
+ 
 ```
 
 
