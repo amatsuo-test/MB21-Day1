@@ -31,7 +31,7 @@ The data is here: https://www.dropbox.com/s/3bqwbxw6mr9t9jv/COVID-19_Vaccination
 
 #### Download the file
 
-```{r}
+```{r eval = F}
 download.file("https://www.dropbox.com/s/3bqwbxw6mr9t9jv/COVID-19_Vaccinations_in_the_United_States_County.csv.tar.gz?dl=1", destfile = "COVID-19_Vaccinations_in_the_United_States_County.csv.tar.gz")
 ```
 
@@ -50,8 +50,7 @@ Now the data is in R workspace. Do the following
 ### Count the number of variabes and rows
 
 ```{r}
-df_vac %>% dim()
-# dim(df_vec)
+dim(df_vac)
 ```
 
 ### Print out the first 6 rows of the data.frame
@@ -59,9 +58,7 @@ df_vac %>% dim()
 ```{r}
 df_vac %>% head()
 
-df_vac %>% slice(1:6)
 
-df_vac %>% sample_n(6)
 ```
 
 
@@ -72,10 +69,7 @@ df_vac %>% sample_n(6)
 - Obviously there are data points not from states. What are they?
 
 ```{r}
-df_vac %>% count(Recip_State) %>% arrange(desc(n))
-
-df_vac %>% count(Recip_State) %>% count(nchar(Recip_State))
-
+df_vac %>% count()
 ```
 
 
@@ -86,35 +80,23 @@ df_vac %>% count(Recip_State) %>% count(nchar(Recip_State))
 The variable Date is character. Convert it to a Date variable.
 
 ```{r}
-df_vac <- df_vac %>%
-  #head() %>%
-  #mutate(Date = Date %>% as.Date(format = "%m/%d/%Y"))
-  mutate(Date = Date %>% lubridate::mdy())
 
 ```
 
 ### Erase unnecessary rows
 
-First remove the non-county entries
+First remove the non-country entries
 
 ```{r}
-df_vac <- df_vac %>% 
-  mutate(FIPS = FIPS %>% as.integer) %>%
-  filter(!is.na(FIPS))
 
 ```
 
 
 ### Create a subset dataset
 
-Find the latest date of the data, then subset the data with only the newest date for each county
+Find the latest date of the data, then subset the data with only the newest date for each country
 
 ```{r}
-df_vac_latest <- df_vac %>%
-  group_by(FIPS) %>%
-  filter(Date == max(Date)) %>%
-  ungroup() 
-
 
 ```
 
@@ -123,13 +105,6 @@ df_vac_latest <- df_vac %>%
 Which county has the highest vaccination rate? What is the number?
 
 ```{r}
-df_vac_latest %>% 
-  pull(Series_Complete_Pop_Pct) %>%
-  max(na.rm = T)
-
-
-df_vac_latest %>% 
-  filter(Series_Complete_Pop_Pct == max(Series_Complete_Pop_Pct, na.rm = T))
 
 ```
 
@@ -141,23 +116,12 @@ df_vac_latest %>%
 Using the latest data created above, find out proportion of counties with more than 50 percent of vaccine take up rate.
 
 ```{r}
-df_vac_latest %>% 
-  count(Series_Complete_Pop_Pct > 50) %>%
-  mutate(prop = n /sum(n))
-  
 
 ```
 
 ### Proportion of county with more than 50 percent vaccination rate, by state (latest)
 
 ```{r}
-df_vac_latest %>% 
-  group_by(Recip_State) %>%
-  count(more_than_50 = Series_Complete_Pop_Pct > 50) %>%
-  mutate(prop = n /sum(n)) %>%
-  filter(more_than_50 == T) %>% 
-  arrange(desc(prop))
-
 
 ```
 
