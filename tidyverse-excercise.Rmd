@@ -164,7 +164,11 @@ df_vac_latest %>%
 ### Date when the vaccination rate exceeded 10 percent in each county
 
 ```{r}
-
+df_vac %>%
+  filter(Series_Complete_Pop_Pct > 10) %>%
+  group_by(Recip_County) %>%
+  filter(Date == min(Date, na.rm = T))
+  
 ```
 
 ### Aggregate the number of vaccination
@@ -174,7 +178,10 @@ and average of vaccination pct across counties for each day (Hint: grouping and 
 
 
 ```{r}
-
+df_vac %>%
+  group_by(Recip_State, Date) %>%
+  summarize(tot_vac = sum(Series_Complete_Yes), mean_vac = mean(Series_Complete_Pop_Pct))
+  
 ```
 
 
@@ -186,13 +193,25 @@ Now let's visualize the outputs using ggplot
 ### Time series plot of total vaccination in the US
 
 ```{r}
- 
+df_vac %>%
+  group_by(Date) %>%
+  summarize(Series_Complete_Pop_Pct = sum(Series_Complete_Pop_Pct, na.rm = T)) %>%
+  filter(Series_Complete_Pop_Pct > 0 ) %>%
+  ggplot(aes(x = Date, y = Series_Complete_Pop_Pct)) + geom_line() +
+  scale_x_date(date_labels = "%y-%b")
+
 ```
 
 
 ### Time series plot of total vaccination by the state
 
 ```{r}
+df_vac %>%
+  group_by(Date, Recip_State) %>%
+  summarize(Series_Complete_Pop_Pct = sum(Series_Complete_Pop_Pct, na.rm = T)) %>%
+  filter(Series_Complete_Pop_Pct > 0 ) %>%
+  ggplot(aes(x = Date, y = Series_Complete_Pop_Pct, color = Recip_State)) + geom_line() +
+  scale_x_date(date_labels = "%y-%b")
 
 ```
 
