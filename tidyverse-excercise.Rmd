@@ -195,9 +195,9 @@ Now let's visualize the outputs using ggplot
 ```{r}
 df_vac %>%
   group_by(Date) %>%
-  summarize(Series_Complete_Pop_Pct = sum(Series_Complete_Pop_Pct, na.rm = T)) %>%
-  filter(Series_Complete_Pop_Pct > 0 ) %>%
-  ggplot(aes(x = Date, y = Series_Complete_Pop_Pct)) + geom_line() +
+  summarize(Series_Complete_Yes = sum(Series_Complete_Yes, na.rm = T)) %>%
+  filter(Series_Complete_Yes > 0 ) %>%
+  ggplot(aes(x = Date, y = Series_Complete_Yes)) + geom_line() +
   scale_x_date(date_labels = "%y-%b")
 
 ```
@@ -208,9 +208,10 @@ df_vac %>%
 ```{r}
 df_vac %>%
   group_by(Date, Recip_State) %>%
-  summarize(Series_Complete_Pop_Pct = sum(Series_Complete_Pop_Pct, na.rm = T)) %>%
-  filter(Series_Complete_Pop_Pct > 0 ) %>%
-  ggplot(aes(x = Date, y = Series_Complete_Pop_Pct, color = Recip_State)) + geom_line() +
+  summarize(Series_Complete_Yes = sum(Series_Complete_Yes, na.rm = T)) %>%
+  filter(Series_Complete_Yes > 0 ) %>%
+  ggplot(aes(x = Date, y = Series_Complete_Yes, color = Recip_State)) + 
+  geom_line() +
   scale_x_date(date_labels = "%y-%b")
 
 ```
